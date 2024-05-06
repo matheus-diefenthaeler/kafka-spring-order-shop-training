@@ -4,7 +4,7 @@ import com.learnavro.domain.generated.*;
 import com.learnavro.dto.CoffeeOrderDTO;
 import com.learnavro.dto.CoffeeOrderUpdateDTO;
 import com.learnavro.producer.CoffeeOrderProducer;
-import com.learnavro.producer.CoffeeOrderUpdateProducer;
+//import com.learnavro.producer.CoffeeOrderUpdateProducer;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -16,16 +16,16 @@ import java.util.stream.Collectors;
 public class CoffeeOrderService {
 
     CoffeeOrderProducer coffeeOrderProducer;
-    CoffeeOrderUpdateProducer coffeeOrderUpdateProducer;
+//    CoffeeOrderUpdateProducer coffeeOrderUpdateProducer;
 
-//    public CoffeeOrderService(CoffeeOrderProducer coffeeOrderProducer) {
-//        this.coffeeOrderProducer = coffeeOrderProducer;
-//    }
-
-    public CoffeeOrderService(CoffeeOrderProducer coffeeOrderProducer, CoffeeOrderUpdateProducer coffeeOrderUpdateProducer) {
+    public CoffeeOrderService(CoffeeOrderProducer coffeeOrderProducer) {
         this.coffeeOrderProducer = coffeeOrderProducer;
-        this.coffeeOrderUpdateProducer = coffeeOrderUpdateProducer;
     }
+
+//    public CoffeeOrderService(CoffeeOrderProducer coffeeOrderProducer, CoffeeOrderUpdateProducer coffeeOrderUpdateProducer) {
+//        this.coffeeOrderProducer = coffeeOrderProducer;
+//        this.coffeeOrderUpdateProducer = coffeeOrderUpdateProducer;
+//    }
 
 
     public CoffeeOrderDTO newOrder(CoffeeOrderDTO coffeeOrderDTO) {
@@ -82,11 +82,11 @@ public class CoffeeOrderService {
         return store;
     }
 
-    public CoffeeOrderUpdateDTO updateOrder(String orderId, CoffeeOrderUpdateDTO coffeeOrderUpdateDTO) {
-        var coffeeOrderUpdateAvro = mapToCoffeeOrderUpdate(orderId, coffeeOrderUpdateDTO);
-        coffeeOrderUpdateProducer.sendUpdateMessage(orderId, coffeeOrderUpdateAvro);
-        return coffeeOrderUpdateDTO;
-    }
+//    public CoffeeOrderUpdateDTO updateOrder(String orderId, CoffeeOrderUpdateDTO coffeeOrderUpdateDTO) {
+//        var coffeeOrderUpdateAvro = mapToCoffeeOrderUpdate(orderId, coffeeOrderUpdateDTO);
+//        coffeeOrderUpdateProducer.sendUpdateMessage(orderId, coffeeOrderUpdateAvro);
+//        return coffeeOrderUpdateDTO;
+//    }
 
     private CoffeeUpdateEvent mapToCoffeeOrderUpdate(String orderId, CoffeeOrderUpdateDTO coffeeOrderUpdateDTO) {
 

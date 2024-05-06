@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
+import java.util.concurrent.CompletableFuture;
+
 @Component
 @Slf4j
 public class CoffeeOrderProducer {
@@ -23,19 +25,13 @@ public class CoffeeOrderProducer {
         var producerRecord = new ProducerRecord<>("coffee-orders", coffeeOrderAvro.getId().toString(), coffeeOrderAvro);
 
 
-        ListenableFuture<SendResult<String,CoffeeOrder>> listenableFuture =  kafkaTemplate.send(producerRecord);;
-        listenableFuture.addCallback(new ListenableFutureCallback<SendResult<String, CoffeeOrder>>() {
+        CompletableFuture<SendResult<String, CoffeeOrder>> completableFuture = kafkaTemplate.send(producerRecord);
 
-            @Override
-            public void onFailure(Throwable ex) {
-                handleFailure(coffeeOrderAvro, ex);
-            }
-
-            @Override
-            public void onSuccess(SendResult<String, CoffeeOrder> result) {
-                handleSuccess(coffeeOrderAvro, result);
-            }
-        });
+        completableFuture.thenAccept(result -> handleSuccess(coffeeOrderAvro, result))
+                .exceptionally(throwable -> {
+                    handleFailure(coffeeOrderAvro, throwable);
+                    return null;
+                });
     }
 
     private void handleFailure(CoffeeOrder coffeeOrder, Throwable ex) {
